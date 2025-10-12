@@ -1,5 +1,5 @@
 <?php
 
 return [
-  'url' => env('KEPEGAWAIAN_URL'),
+    'url' => env('KEPEGAWAIAN_URL'),
 ];
