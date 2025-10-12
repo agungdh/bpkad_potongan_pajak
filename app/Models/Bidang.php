@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-class User
+class Bidang
 {
     public function __construct(
-        public string $username,
+        public string $nama,
     ) {}
 }
