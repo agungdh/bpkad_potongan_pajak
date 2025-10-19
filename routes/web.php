@@ -7,9 +7,16 @@ use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (!session()->get('user')) {
+        return redirect('/auth/redirect');
+    }
+    return session()->all();
 });
 
+Route::get('/logout', function () {
+    session()->invalidate();
+    session()->regenerateToken();
+});
 
 Route::get('/auth/redirect', function () {
     return Socialite::driver('laravelpassport')->redirect();
@@ -18,5 +25,7 @@ Route::get('/auth/redirect', function () {
 Route::get('/auth/callback', function () {
     $user = Socialite::driver('laravelpassport')->user();
 
-    dd($user);
+    Session::put('user',$user);
+
+    return redirect('/');
 });
