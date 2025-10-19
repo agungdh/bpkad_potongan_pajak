@@ -27,6 +27,10 @@ Route::get('/auth/callback', function (Request $request) {
         'code' => $request->code,
     ]);
 
+    $json = $response->json();
+
+    $response = Http::acceptJson()->withToken($json['access_token'])->get(env('SSO_URL') . '/api/user');
+
     return $response->json();
 });
 
