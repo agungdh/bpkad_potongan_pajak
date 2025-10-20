@@ -1,21 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
-Route::get('/logout', function () {
-    session()->invalidate();
-    session()->regenerateToken();
-});
-
-Route::get('/auth/redirect', function () {
-    return Socialite::driver('laravelpassport')->redirect();
-});
-
-Route::get('/auth/callback', function () {
-    $user = Socialite::driver('laravelpassport')->user();
-
-    Session::put('user', $user);
-
-    return redirect('/');
-});
+Route::get('/auth/redirect', [AuthController::class, 'redirect']);
+Route::get('/auth/callback', [AuthController::class, 'callback']);
+Route::get('/logout', [AuthController::class, 'logout']);
