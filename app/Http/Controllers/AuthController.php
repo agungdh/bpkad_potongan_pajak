@@ -25,9 +25,8 @@ class AuthController extends Controller
 
         $driver = Session::getDrivers()[Session::getDefaultDriver()];
         $dbId = $driver->getId();
-        dd(user());
         DB::table('sessions')->where('id', $dbId)->update([
-           'user_uuid' => user()['uuid'],
+           'user_uuid' => $user['uuid'],
         ]);
 
         Session::put('user', $user);
