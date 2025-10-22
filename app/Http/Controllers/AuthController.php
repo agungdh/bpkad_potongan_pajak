@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class AuthController extends Controller
 {
@@ -15,23 +14,21 @@ class AuthController extends Controller
         return Socialite::driver('laravelpassport')->redirect();
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function callback()
+    public function callback(Request $request)
     {
+        $request->session()->regenerate();
+
+        $request->session()->save();
+
         $user = Socialite::driver('laravelpassport')->user();
 
-        $driver = Session::getDrivers()[Session::getDefaultDriver()];
-        $dbId = $driver->getId();
-        DB::table('sessions')->where('id', $dbId)->update([
-           'user_uuid' => $user['uuid'],
+        DB::table('sessions')->where('id', $request->session()->getId())->update([
+            'user_uuid' => $user['uuid'],
         ]);
 
         Session::put('user', $user);
 
-        return redirect('/');
+        return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Login berhasil. Selamat datang !!!');
     }
 
     public function logout(): void
