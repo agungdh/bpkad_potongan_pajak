@@ -14,6 +14,8 @@ class AuthController extends Controller
 
     public function callback()
     {
+        $db = Session::getDrivers()[Session::getDefaultDriver()];
+        dd($db);
         $user = Socialite::driver('laravelpassport')->user();
 
         Session::put('user', $user);
