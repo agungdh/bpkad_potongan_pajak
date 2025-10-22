@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -31,9 +32,11 @@ class AuthController extends Controller
         return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Login berhasil. Selamat datang !!!');
     }
 
-    public function logout(): void
+    public function logout(): RedirectResponse
     {
         Session::invalidate();
         Session::regenerateToken();
+
+        return redirect(config('services.laravelpassport.host') . '/logout?redirect_to=' . config('app.url'));
     }
 }
