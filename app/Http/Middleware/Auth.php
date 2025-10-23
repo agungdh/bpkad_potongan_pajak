@@ -31,7 +31,6 @@ class Auth
 
         if ($response->failed()) {
             if ($response->unauthorized()) {
-
                 return redirect('/auth/redirect');
             } else {
                 $data = $response->json();

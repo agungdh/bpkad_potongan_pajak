@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
+    public function login(Request $request) {
+        return redirect($request->url)->with('success', 'Login berhasil. Selamat datang !!!');
+    }
+
     public function redirect()
     {
         return Socialite::driver('laravelpassport')->redirect();
@@ -21,7 +27,6 @@ class AuthController extends Controller
 
         $request->session()->save();
 
-
         $passport = Socialite::driver('laravelpassport');
         $user = $passport->user();
 
@@ -32,7 +37,18 @@ class AuthController extends Controller
         Session::put('passport', $user->accessTokenResponseBody);
         Session::put('user', $user);
 
-        return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Login berhasil. Selamat datang !!!');
+        $url = $request->session()->get('url.intended', route('dashboard', absolute: true));
+
+        $parts = explode('.', passport()['access_token']);
+        if (count($parts) === 3) {
+            $payload = json_decode(base64_decode(strtr($parts[1], '-_', '+/')), true);
+            $jti = $payload['jti'] ?? null;
+        } else {
+            $jti = null;
+        }
+        $jti = Crypt::encryptString($jti);
+
+        return redirect(config('services.laravelpassport.host') . '/redirect?jti='.$jti.'&redirect_to=' . $url);
     }
 
     public function logout(): RedirectResponse
