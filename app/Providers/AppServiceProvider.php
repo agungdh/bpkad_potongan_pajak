@@ -26,8 +26,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::if('role', function (string $value) {
-            dd($value);
-            return true;
+            return $value === user()['rolename'];
         });
     }
 }
