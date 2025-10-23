@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('laravelpassport', \SocialiteProviders\LaravelPassport\Provider::class);
+        });
+
+        Blade::if('role', function (string $value) {
+            dd($value);
+            return true;
         });
     }
 }
