@@ -6,13 +6,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         return redirect($request->url)->with('success', 'Login berhasil. Selamat datang !!!');
     }
 
@@ -48,7 +48,7 @@ class AuthController extends Controller
         }
         $jti = Crypt::encryptString($jti);
 
-        return redirect(config('services.laravelpassport.host') . '/redirect?jti='.$jti.'&redirect_to=' . $url);
+        return redirect(config('services.laravelpassport.host').'/redirect?jti='.$jti.'&redirect_to='.$url);
     }
 
     public function logout(): RedirectResponse
@@ -56,6 +56,6 @@ class AuthController extends Controller
         Session::invalidate();
         Session::regenerateToken();
 
-        return redirect(config('services.laravelpassport.host') . '/logout?redirect_to=' . config('app.url'));
+        return redirect(config('services.laravelpassport.host').'/logout?redirect_to='.config('app.url'));
     }
 }
