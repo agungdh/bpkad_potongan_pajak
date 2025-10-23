@@ -21,12 +21,15 @@ class AuthController extends Controller
 
         $request->session()->save();
 
-        $user = Socialite::driver('laravelpassport')->user();
+
+        $passport = Socialite::driver('laravelpassport');
+        $user = $passport->user();
 
         DB::table('sessions')->where('id', $request->session()->getId())->update([
             'user_uuid' => $user['uuid'],
         ]);
 
+        Session::put('passport', $user->accessTokenResponseBody);
         Session::put('user', $user);
 
         return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Login berhasil. Selamat datang !!!');

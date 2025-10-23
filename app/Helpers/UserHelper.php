@@ -13,3 +13,14 @@ if (! function_exists('user')) {
         return session()?->get('user')?->user;
     }
 }
+
+if (! function_exists('passport')) {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    function passport()
+    {
+        return session()?->get('passport');
+    }
+}
